@@ -173,6 +173,23 @@ test("[func] xhr.del", function (assert) {
     })
 })
 
+test("convenience signature without object", function (assert) {
+    xhr("/some-test", function (err, resp, body) {
+        assert.equal(resp.url, '/some-test')
+        assert.end()
+    })
+})
+
+test("convenience signature with object", function (assert) {
+    xhr("/some-test", {
+        headers: { "foo": "bar" }
+    }, function (err, resp, body) {
+        assert.equal(resp.url, '/some-test')
+        assert.equal(resp.rawRequest.headers.foo, 'bar')
+        assert.end()
+    })
+})
+
 test("XHR can be overridden", function (assert) {
   var xhrs = 0
   var noop = function () {}

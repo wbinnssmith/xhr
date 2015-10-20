@@ -107,7 +107,15 @@ function createXHR(options, callback) {
     }
 
     if (typeof options === "string") {
-        options = { uri: options }
+        if (typeof callback === "object" && arguments.length === 3) {
+            // xhr(url, options, cb)
+            callback.uri = options
+            options = callback
+            callback = arguments[2]
+        } else {
+            // xhr(url, cb)
+            options = { uri: options }
+        }
     }
 
     options = options || {}
