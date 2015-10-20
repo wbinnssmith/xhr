@@ -1,6 +1,7 @@
 "use strict";
 var window = require("global/window")
 var once = require("once")
+var forEach = require("for-each")
 var parseHeaders = require("parse-headers")
 
 
@@ -9,6 +10,17 @@ module.exports = createXHR
 createXHR.XMLHttpRequest = window.XMLHttpRequest || noop
 createXHR.XDomainRequest = "withCredentials" in (new createXHR.XMLHttpRequest()) ? createXHR.XMLHttpRequest : window.XDomainRequest
 
+forEach(["get", "put", "post", "patch", "head"], function(method) {
+  createXHR[method] = function(options, callback) {
+    options.method = method.toUpperCase()
+    return createXHR(options, callback)
+  }
+})
+
+createXHR.del = function(options, callback) {
+  options.method = "DELETE"
+  return createXHR(options, callback)
+}
 
 function isEmpty(obj){
     for(var i in obj){
